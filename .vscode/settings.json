@@ -6,6 +6,7 @@
         "middlewares",
         "minlength",
         "natours",
+        "promisify",
         "slugify",
         "virtuals"
     ]
