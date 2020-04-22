@@ -6,6 +6,7 @@ const {
   createUser,
   updateUser,
   deleteUser,
+  updateMe,
 } = require('../controllers/userController')
 const {
   signup,
@@ -21,6 +22,7 @@ const router = express.Router()
 router.post('/signup', signup)
 router.post('/login', login)
 
+router.patch('/update-me', protect, updateMe)
 router.patch('/update-password', protect, updatePassword)
 router.post('/forgot-password', forgotPassword)
 router.patch('/reset-password/:token', resetPassword)
