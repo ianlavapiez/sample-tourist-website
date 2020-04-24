@@ -1,6 +1,6 @@
 const User = require('../models/userModel')
 
-const { deleteOne } = require('./handlerFactory')
+const { updateOne, deleteOne } = require('./handlerFactory')
 
 const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/appError')
@@ -75,11 +75,6 @@ exports.createUser = (req, res) => {
   })
 }
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  })
-}
-
+// Do NOT update passwords with this!
+exports.updateUser = updateOne(User)
 exports.deleteUser = deleteOne(User)
