@@ -21,6 +21,12 @@ exports.getUser = retrieveOne(User)
 exports.updateUser = updateOne(User)
 exports.deleteUser = deleteOne(User)
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id
+
+  next()
+}
+
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create error if user posts password data
   if (req.body.password || req.body.passwordConfirm) {
