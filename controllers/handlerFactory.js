@@ -80,6 +80,8 @@ exports.retrieveAll = (Model) =>
       .limitFields()
       .paginate()
     const docs = await features.query
+    // this code shows the overview of queried docs
+    // const docs = await features.query.explain()
 
     // SEND RESPONSE
     res.status(200).json({
