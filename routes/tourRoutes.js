@@ -11,6 +11,7 @@ const {
   updateTour,
   deleteTour,
   aliasTopTours,
+  getToursWithin,
 } = require('../controllers/tourController')
 const { protect, restrictTo } = require('../controllers/authController')
 
@@ -24,6 +25,7 @@ router
   .route('/monthly-plan/:year')
   .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan)
 router.route('/').get(getAllTours).post(protect, restrictTo('admin', 'lead-guide'), createTour)
+router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(getToursWithin)
 router
   .route('/:id')
   .get(getTour)
