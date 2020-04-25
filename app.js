@@ -73,7 +73,10 @@ app.use((req, res, next) => {
 
 // 2. Routes
 app.get('/', (req, res) => {
-  res.status(200).render('base')
+  res.status(200).render('base', {
+    tour: 'The Park Camper',
+    user: 'Ian',
+  })
 })
 
 app.use('/api/v1/tours', tourRouter)
