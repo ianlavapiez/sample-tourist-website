@@ -4,6 +4,8 @@
         "errmsg",
         "latlng",
         "lavapiez",
+        "mapbox",
+        "mapboxgl",
         "maxlength",
         "middlewares",
         "minlength",
