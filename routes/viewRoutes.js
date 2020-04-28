@@ -1,14 +1,23 @@
-const express = require('express')
+const express = require('express');
+const viewsController = require('../controllers/viewsController');
+const authController = require('../controllers/authController');
 
-const { getOverview, getTour, getLoginForm } = require('../controllers/viewController')
-const { isLoggedIn } = require('../controllers/authController')
+const router = express.Router();
 
-const router = express.Router()
+router.use(viewsController.alerts);
 
-router.use(isLoggedIn)
+router.get('/', authController.isLoggedIn, viewsController.getOverview);
 
-router.get('/', getOverview)
-router.get('/tour/:slug', getTour)
-router.get('/login', getLoginForm)
+router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
+router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
+router.get('/me', authController.protect, viewsController.getAccount);
 
-module.exports = router
+router.get('/my-tours', authController.protect, viewsController.getMyTours);
+
+router.post(
+  '/submit-user-data',
+  authController.protect,
+  viewsController.updateUserData
+);
+
+module.exports = router;
