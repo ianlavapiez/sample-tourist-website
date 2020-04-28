@@ -1,16 +1,18 @@
-const catchAsync = require('../utils/catchAsync')
-const AppError = require('../utils/appError')
-const APIFeatures = require('../utils/apiFeatures')
+const catchAsync = require('./../utils/catchAsync')
+const AppError = require('./../utils/appError')
+const APIFeatures = require('./../utils/apiFeatures')
 
-exports.createOne = (Model) =>
+exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.create(req.body)
+    const doc = await Model.findByIdAndDelete(req.params.id)
 
-    res.status(201).json({
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404))
+    }
+
+    res.status(204).json({
       status: 'success',
-      data: {
-        data: doc,
-      },
+      data: null,
     })
   })
 
@@ -33,26 +35,22 @@ exports.updateOne = (Model) =>
     })
   })
 
-exports.deleteOne = (Model) =>
+exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id)
+    const doc = await Model.create(req.body)
 
-    if (!doc) {
-      return next(new AppError('No document found with that ID', 404))
-    }
-
-    res.status(204).json({
+    res.status(201).json({
       status: 'success',
-      data: null,
+      data: {
+        data: doc,
+      },
     })
   })
 
-exports.retrieveOne = (Model, populateOptions) =>
+exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id)
-
-    if (populateOptions) query = query.populate(populateOptions)
-
+    if (popOptions) query = query.populate(popOptions)
     const doc = await query
 
     if (!doc) {
@@ -67,28 +65,26 @@ exports.retrieveOne = (Model, populateOptions) =>
     })
   })
 
-exports.retrieveAll = (Model) =>
+exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
+    // To allow for nested GET reviews on tour (hack)
     let filter = {}
-
     if (req.params.tourId) filter = { tour: req.params.tourId }
 
-    // EXECUTE QUERY
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate()
-    const docs = await features.query
-    // this code shows the overview of queried docs
-    // const docs = await features.query.explain()
+    // const doc = await features.query.explain();
+    const doc = await features.query
 
     // SEND RESPONSE
     res.status(200).json({
       status: 'success',
-      results: docs.length,
+      results: doc.length,
       data: {
-        data: docs,
+        data: doc,
       },
     })
   })
